@@ -1,6 +1,6 @@
 from selenium import webdriver
 from time import sleep
-
+from selenium.webdriver.chrome.options import Options
 
 
 class ProfileScanner() : 
@@ -11,11 +11,13 @@ class ProfileScanner() :
         self.mainDic['Source'] = link
         self.proccesDriver = webdriver.Chrome(executable_path="C:\Coding\ValorantTrackerProject\chromedriver.exe")
         self.openPage(link)
+        # click the episode 5 act 3 button by Xpath (only doing this cause this new act too recent)
+        self.proccesDriver.find_element_by_xpath('//*[@id="app"]/div[2]/div[3]/div/main/div[3]/div[3]/div[1]/div/div[2]/div/ul/li[3]').click()
         sleep(1)
         # main profile gets the main headers
         self.parent = self.proccesDriver.find_element_by_class_name('trn-content')
-        self.sidebar = self.parent.find_element_by_class_name('area-sidebar')
-        self.mainbar = self.parent.find_element_by_class_name('area-main')
+        self.sidebar = self.proccesDriver.find_element_by_class_name('area-sidebar')
+        self.mainbar = self.proccesDriver.find_element_by_class_name('area-main')
         self.setUrls()
 
 
@@ -31,7 +33,7 @@ class ProfileScanner() :
 
     def openPage(self,link):
         self.proccesDriver.get(link)
-        sleep(5)
+        sleep(4)
 
     def back (self):
         self.proccesDriver.back()
@@ -101,9 +103,9 @@ class ProfileScanner() :
     def weponData(self) : 
         self.openPage(self.getWeponUrl())
         #self.proccesDriver.find_element_by_xpath('//*[@id="app"]/div[2]/div[3]/div/main/div[3]/div[3]/div[2]/div/div[3]/div[1]/div[1]/span').click()
-        sleep(1)
+#         sleep(1)
         self.weponMainLoop = self.proccesDriver.find_elements_by_class_name('st-content__item')
-        for wepons in self.weponMainLoop:
+        for wepons in self.weponMainLoop[4:]:
             self.weponInfoList = wepons.find_elements_by_class_name('value')
             self.weponName = self.weponInfoList[0].text
             self.mainDic[f'{self.weponName}-Kills']  = self.weponInfoList[1].text
@@ -115,8 +117,8 @@ class ProfileScanner() :
 
     def agentData (self):
         self.openPage(self.getAgentUrl())
-        self.proccesDriver.find_element_by_css_selector('div.content.no-card-margin > div.site-container.trn-grid.trn-grid--vertical.trn-grid--small > div.trn-grid.trn-grid--small.agents > div > div.st-header > div.st__item.st-header__item.st-header__item--sortable.st__item--sticky.st__item--wide.agent-row').click()
-        sleep(1)
+#         self.proccesDriver.find_element_by_css_selector('div.content.no-card-margin > div.site-container.trn-grid.trn-grid--vertical.trn-grid--small > div.trn-grid.trn-grid--small.agents > div > div.st-header > div.st__item.st-header__item.st-header__item--sortable.st__item--sticky.st__item--wide.agent-row').click()
+#         sleep(1)
         self.result = []
         for i in self.proccesDriver.find_elements_by_css_selector('div.value'):
             self.result.append(i.text)
@@ -134,18 +136,22 @@ class ProfileScanner() :
             self.mainDic[f'{name}-HS%'] = element[7]
             self.mainDic[f'{name}-KAST'] = element[8]
 
+            # removing to reduce size 
             # these give wroing data have to manually go through and fix (up to whoever imroving if want to fix or not)
-            self.mainDic[f'{name}-AttackWinLoss'] = element[11]
-            self.mainDic[f'{name}-AttackWin%'] = element[12]
-            self.mainDic[f'{name}-AttackK/D'] = element[13]
-            self.mainDic[f'{name}-DefenseWinLoss'] = element[14]
-            self.mainDic[f'{name}-DefenseWin%'] = element[15]
-            self.mainDic[f'{name}-DefenseK/D'] = element[16]
+            # self.mainDic[f'{name}-AttackWinLoss'] = element[11]
+            # self.mainDic[f'{name}-AttackWin%'] = element[12]
+            # self.mainDic[f'{name}-AttackK/D'] = element[13]
+            # self.mainDic[f'{name}-DefenseWinLoss'] = element[14]
+            # self.mainDic[f'{name}-DefenseWin%'] = element[15]
+            # self.mainDic[f'{name}-DefenseK/D'] = element[16]
 
     def getDictionaryKeys(self):
         return list(self.mainDic.keys())
-
+    
     def getDictionaryValues(self):
         return list(self.mainDic.values())
 
+    def getDictionary(self):
+        return list(self.mainDic)
+    
     
