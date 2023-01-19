@@ -120,7 +120,8 @@ class ProfileScanner() :
         self.result = []
         for i in self.proccesDriver.find_elements_by_css_selector('div.value'):
             self.result.append(i.text)
-            
+
+        # Human Error in This part need to fix (basically 1 before HS% )   
         list_chunked = [self.result[i:i +  18] for i in range(0, len(self.result),  18)]
         for element in list_chunked:
             name = element[0]
@@ -129,8 +130,11 @@ class ProfileScanner() :
             self.mainDic[f'{name}-Win%'] = element[3]
             self.mainDic[f'{name}-K/D'] = element[4]
             self.mainDic[f'{name}-ADR'] = element[5]
-            self.mainDic[f'{name}-HS%'] = element[6]
-            self.mainDic[f'{name}-KAST'] = element[7]
+            self.mainDic[f'{name}-ACS'] = element[6]
+            self.mainDic[f'{name}-HS%'] = element[7]
+            self.mainDic[f'{name}-KAST'] = element[8]
+
+            # these give wroing data have to manually go through and fix (up to whoever imroving if want to fix or not)
             self.mainDic[f'{name}-AttackWinLoss'] = element[11]
             self.mainDic[f'{name}-AttackWin%'] = element[12]
             self.mainDic[f'{name}-AttackK/D'] = element[13]
